@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -g3
 
-INSTALL_PATH = $$HOME/simgrid
+INSTALL_PATH = $$HOME/SimGrid
 INCLUDES = -Iinclude -I$(INSTALL_PATH)/include
 DEFS = -L$(INSTALL_PATH)/lib
 LDADD = -lm -lsimgrid
@@ -10,6 +10,9 @@ BIN = libmrsg.a
 OBJ = common.o simcore.o dfs.o master.o worker.o user.o scheduling.o
 
 all: $(BIN)
+
+install: $(BIN)
+	install $(BIN) $(INSTALL_PATH)/lib
 
 $(BIN): $(OBJ)
 	ar rcs $(BIN) $(OBJ)
@@ -34,4 +37,4 @@ clean:
 	rm -vf $(BIN) *.o *.log *.trace
 
 .SUFFIXES:
-.PHONY: all check clean debug final verbose
+.PHONY: all check clean debug final verbose install
