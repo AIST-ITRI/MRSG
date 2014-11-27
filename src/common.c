@@ -41,6 +41,13 @@ msg_error_t send (const char* str, double cpu, double net, void* data, const cha
     return status;
 }
 
+void dsend_sms (const char* str, const char* mailbox)
+{
+    msg_task_t   msg = NULL;
+    msg = MSG_task_create (str, 0.0, 0.0, NULL);
+    MSG_task_dsend (msg, mailbox, (void_f_pvoid_t)MSG_task_destroy );
+}
+
 msg_error_t send_sms (const char* str, const char* mailbox)
 {
     return send (str, 0.0, 0.0, NULL, mailbox);

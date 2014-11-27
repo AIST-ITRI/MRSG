@@ -71,7 +71,7 @@ static void heartbeat (void)
 {
     while (!job.finished)
     {
-	send_sms (SMS_HEARTBEAT, MASTER_MAILBOX);
+	dsend_sms (SMS_HEARTBEAT, MASTER_MAILBOX);
 	MSG_process_sleep (config.heartbeat_interval);
     }
 }

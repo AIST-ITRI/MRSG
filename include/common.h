@@ -145,6 +145,7 @@ msg_error_t send (const char* str, double cpu, double net, void* data, const cha
  * @return The MSG status of the operation.
  */
 msg_error_t send_sms (const char* str, const char* mailbox);
+void dsend_sms (const char* str, const char* mailbox);
 
 /** 
  * @brief  Receive a message/task from a mailbox.
