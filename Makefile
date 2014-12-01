@@ -3,7 +3,6 @@ CFLAGS = -Wall -g3
 
 INSTALL_PATH = $$HOME/SimGrid
 INCLUDES = -Iinclude -I$(INSTALL_PATH)/include
-DEFS = -L$(INSTALL_PATH)/lib
 LDADD = -lm -lsimgrid
 
 BIN = libmrsg.a
@@ -22,7 +21,7 @@ $(BIN): $(OBJ)
 #	$(CC) $(INCLUDES) $(DEFS) $(CFLAGS) $(LDADD) -o $@ $^
 
 %.o: src/%.c include/*.h
-	$(CC) $(INCLUDES) $(DEFS) $(CFLAGS) -c -o $@ $<
+	$(CC) $(INCLUDES) $(CFLAGS) -c -o $@ $<
 
 verbose: clean
 	$(eval CFLAGS += -DVERBOSE)
