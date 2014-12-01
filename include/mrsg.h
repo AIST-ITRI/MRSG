@@ -19,6 +19,9 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
 #define MRSG_H
 
 #include <stdlib.h>
+#include <xbt/misc.h>
+
+SG_BEGIN_DECL()
 
 /** @brief  Possible execution phases. */
 enum phase_e {
@@ -37,6 +40,8 @@ void MRSG_set_dfs_f ( void (*f)(char** dfs_matrix, size_t chunks, size_t workers
 void MRSG_set_map_output_f ( int (*f)(size_t mid, size_t rid) );
 
 void MRSG_set_scheduler_f ( size_t (*f)(enum phase_e phase, size_t wid) );
+
+SG_END_DECL()
 
 #endif /* !MRSG_H */
 

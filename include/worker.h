@@ -18,6 +18,10 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
 #ifndef WORKER_H
 #define WORKER_H
 
+#include <xbt/misc.h>
+
+SG_BEGIN_DECL()
+
 /* hadoop-config: mapred.max.tracker.failures */
 #define MAXIMUM_WORKER_FAILURES 4
 
@@ -31,6 +35,8 @@ typedef struct w_info_s {
  * @return The worker's ID number.
  */
 size_t get_worker_id (msg_host_t worker);
+
+SG_END_DECL()
 
 #endif /* !WORKER_H */
 

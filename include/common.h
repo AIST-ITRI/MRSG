@@ -19,10 +19,13 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
 #define MRSG_COMMON_H
 
 #include <msg/msg.h>
+#include <xbt/misc.h>
 #include <xbt/sysdep.h>
 #include <xbt/log.h>
 #include <xbt/asserts.h>
 #include "mrsg.h"
+
+SG_BEGIN_DECL()
 
 /* Hearbeat parameters. */
 #define HEARTBEAT_MIN_INTERVAL 3
@@ -174,6 +177,8 @@ size_t map_output_size (size_t mid);
 size_t reduce_input_size (size_t rid);
 
 enum task_type_e get_task_type (enum phase_e phase, size_t tid, size_t wid);
+
+SG_END_DECL()
 
 #endif /* !MRSG_COMMON_H */
 

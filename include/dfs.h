@@ -18,6 +18,10 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
 #ifndef DFS_H
 #define DFS_H
 
+#include <xbt/misc.h>
+
+SG_BEGIN_DECL()
+
 /** @brief  Matrix that maps chunks to workers. */
 char**  chunk_owner;
 
@@ -44,6 +48,8 @@ size_t find_random_chunk_owner (int cid);
  * Process that listens for data requests.
  */
 int data_node (int argc, char *argv[]);
+
+SG_END_DECL()
 
 #endif /* !DFS_H */
 
