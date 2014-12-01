@@ -12,7 +12,10 @@ OBJ = common.o simcore.o dfs.o master.o worker.o user.o scheduling.o
 all: $(BIN)
 
 install: $(BIN)
-	install $(BIN) $(INSTALL_PATH)/lib
+	install $(BIN)               $(INSTALL_PATH)/lib
+	install include/mrsg.h       $(INSTALL_PATH)/include
+	install include/scheduling.h $(INSTALL_PATH)/include
+	install include/common.h     $(INSTALL_PATH)/include
 
 $(BIN): $(OBJ)
 	ar rcs $(BIN) $(OBJ)
