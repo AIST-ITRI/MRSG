@@ -79,6 +79,7 @@ struct config_s {
     int            chunk_count;
     int            chunk_replicas;
     int            heartbeat_interval;
+    int            reduce_polling_interval;
     int            amount_of_tasks[2];
     int            number_of_workers;
     int            slots[2];

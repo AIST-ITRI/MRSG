@@ -33,7 +33,7 @@ int worker (int argc, char *argv[]);
 
 static void check_config (void);
 static msg_error_t run_simulation (const char* platform_file, const char* deploy_file, const char* mr_config_file);
-static void init_mr_config (const char* mr_config_file);
+static void init_mr_config (void);
 static void read_mr_config_file (const char* file_name);
 static void init_config (void);
 static void init_job (void);
@@ -99,7 +99,7 @@ static msg_error_t run_simulation (const char* platform_file, const char* deploy
     MSG_function_register ("worker", worker);
     MSG_launch_application (deploy_file);
 
-    init_mr_config (mr_config_file);
+    init_mr_config ();
 
     res = MSG_main ();
 
@@ -110,9 +110,8 @@ static msg_error_t run_simulation (const char* platform_file, const char* deploy
 
 /**
  * @brief  Initialize the MapReduce configuration.
- * @param  mr_config_file  The path/name of the configuration file.
  */
-static void init_mr_config (const char* mr_config_file)
+static void init_mr_config (void)
 {
     srand (12345);
     init_config ();
@@ -137,6 +136,8 @@ static void read_mr_config_file (const char* file_name)
     config.slots[MAP] = 2;
     config.amount_of_tasks[REDUCE] = 1;
     config.slots[REDUCE] = 2;
+    config.heartbeat_interval = HEARTBEAT_MIN_INTERVAL;
+    config.reduce_polling_interval = 5;
 
     /* Read the user configuration file. */
 
@@ -171,6 +172,14 @@ static void read_mr_config_file (const char* file_name)
 	{
 	    fscanf (file, "%d", &config.slots[REDUCE]);
 	}
+	else if ( strcmp (property, "heartbeat_interval") == 0 )
+	{
+	    fscanf (file, "%d", &config.heartbeat_interval);
+	}
+	else if ( strcmp (property, "reduce_polling_interval") == 0 )
+	{
+	    fscanf (file, "%d", &config.reduce_polling_interval);
+	}
 	else
 	{
 	    printf ("Error: Property %s is not valid. (in %s)", property, file_name);
@@ -188,6 +197,8 @@ static void read_mr_config_file (const char* file_name)
     xbt_assert (config.slots[MAP] > 0, "Map slots must be greater than zero");
     xbt_assert (config.amount_of_tasks[REDUCE] >= 0, "The number of reduce tasks can't be negative");
     xbt_assert (config.slots[REDUCE] > 0, "Reduce slots must be greater than zero");
+    xbt_assert (config.heartbeat_interval, "heartbeat_interval must be greater than zero");
+    xbt_assert (config.reduce_polling_interval, "reduce_polling_interval must be greater than zero");
 }
 
 /**
@@ -236,7 +247,6 @@ static void init_config (void)
 	}
     }
     config.grid_average_speed = config.grid_cpu_power / config.number_of_workers;
-    config.heartbeat_interval = maxval (HEARTBEAT_MIN_INTERVAL, config.number_of_workers / 100);
     config.amount_of_tasks[MAP] = config.chunk_count;
     config.initialized = 1;
 }
