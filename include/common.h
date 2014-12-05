@@ -83,6 +83,7 @@ struct config_s {
     int            chunk_replicas;
     int            heartbeat_interval;
     int            reduce_polling_interval;
+    double         reduce_slowstart_completed_maps;
     int            amount_of_tasks[2];
     int            number_of_workers;
     int            slots[2];

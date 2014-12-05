@@ -82,8 +82,9 @@ size_t choose_default_reduce_task (size_t wid)
     size_t           t;
     size_t           tid = NONE;
     enum task_type_e task_type, best_task_type = NO_TASK;
+    double ss_rate = 1.0 - config.reduce_slowstart_completed_maps;
 
-    if (job.tasks_pending[REDUCE] <= 0 || (float)job.tasks_pending[MAP]/config.amount_of_tasks[MAP] > 0.9)
+    if (job.tasks_pending[REDUCE] <= 0 || (double)job.tasks_pending[MAP]/config.amount_of_tasks[MAP] > ss_rate)
 	return tid;
 
     for (t = 0; t < config.amount_of_tasks[REDUCE]; t++)
