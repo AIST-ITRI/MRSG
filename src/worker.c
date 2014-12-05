@@ -255,9 +255,7 @@ static void get_map_output (task_info_t ti)
 	    }
 	}
 	/* (Hadoop 0.20.2) mapred/ReduceTask.java:1979 */
-        if (total_copied < must_copy) {
-	    MSG_process_sleep (config.reduce_polling_interval);
-        }
+	MSG_process_sleep (config.reduce_polling_interval);
     }
 
 #ifdef VERBOSE
