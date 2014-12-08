@@ -136,8 +136,8 @@ static void read_mr_config_file (const char* file_name)
     config.slots[MAP] = 2;
     config.amount_of_tasks[REDUCE] = 1;
     config.slots[REDUCE] = 2;
-    config.heartbeat_interval = HEARTBEAT_MIN_INTERVAL;
-    config.reduce_polling_interval = 5;
+    config.heartbeat_interval = 1;
+    config.reduce_polling_interval = 1;
     config.reduce_slowstart_completed_maps = 0.05;
 
     /* Read the user configuration file. */
