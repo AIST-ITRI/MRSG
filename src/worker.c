@@ -214,6 +214,9 @@ static void get_map_output (task_info_t ti)
     size_t       my_id;
     size_t       wid;
     size_t*      data_copied;
+    size_t       number_of_availavle_worker;
+    size_t       target_map_host;
+    int          i;
 
     my_id = get_worker_id (MSG_host_self ());
     data_copied = xbt_new0 (size_t, config.number_of_workers);
@@ -227,35 +230,58 @@ static void get_map_output (task_info_t ti)
 
     while (total_copied < must_copy)
     {
-	for (wid = 0; wid < config.number_of_workers; wid++)
-	{
-	    if (job.task_status[REDUCE][ti->id] == T_STATUS_DONE)
-	    {
-		xbt_free_ref (&data_copied);
-		return;
-	    }
+        if (job.task_status[REDUCE][ti->id] == T_STATUS_DONE)
+        {
+            xbt_free_ref (&data_copied);
+            return;
+        }
+        number_of_availavle_worker = 0;
+        for (wid = 0; wid < config.number_of_workers; wid++)
+        {
+            if (job.map_output[wid][ti->id] > data_copied[wid])
+            {
+                ++number_of_availavle_worker;
+            }
+        }
+        if (number_of_availavle_worker > 0) 
+        {
+            /* TODO: this is not uniform distribution.*/
+            target_map_host = rand() % number_of_availavle_worker;
+            i = 0;
+            for (wid = 0; wid < config.number_of_workers; wid++)
+            {
+                if (job.map_output[wid][ti->id] > data_copied[wid])
+                {
+                    if (i == target_map_host)
+                    {
+                        break;
+                    }
+                    ++i;
+                }
+            }
+            xbt_assert (wid < config.number_of_workers, "no worker");
 
-	    if (job.map_output[wid][ti->id] > data_copied[wid])
-	    {
-		sprintf (mailbox, DATANODE_MAILBOX, wid);
-		status = send (SMS_GET_INTER_PAIRS, 0.0, 0.0, ti, mailbox);
-		if (status == MSG_OK)
-		{
-		    sprintf (mailbox, TASK_MAILBOX, my_id, MSG_process_self_PID ());
-		    data = NULL;
-		    //TODO Set a timeout: reduce.copy.backoff
-		    status = receive (&data, mailbox);
-		    if (status == MSG_OK)
-		    {
-			data_copied[wid] += MSG_task_get_data_size (data);
-			total_copied += MSG_task_get_data_size (data);
-			MSG_task_destroy (data);
-		    }
-		}
-	    }
-	}
-	/* (Hadoop 0.20.2) mapred/ReduceTask.java:1979 */
-	MSG_process_sleep (config.reduce_polling_interval);
+            sprintf (mailbox, DATANODE_MAILBOX, wid);
+            status = send (SMS_GET_INTER_PAIRS, 0.0, 0.0, ti, mailbox);
+            if (status == MSG_OK)
+            {
+                sprintf (mailbox, TASK_MAILBOX, my_id, MSG_process_self_PID ());
+                data = NULL;
+                //TODO Set a timeout: reduce.copy.backoff
+                status = receive (&data, mailbox);
+                if (status == MSG_OK)
+                {
+                    data_copied[wid] += MSG_task_get_data_size (data);
+                    total_copied += MSG_task_get_data_size (data);
+                    MSG_task_destroy (data);
+                }
+            }
+        }
+        else
+        {
+            /* (Hadoop 0.20.2) mapred/ReduceTask.java:1979 */
+            MSG_process_sleep (config.reduce_polling_interval);
+        }
     }
 
 #ifdef VERBOSE
