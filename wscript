@@ -20,11 +20,12 @@ def configure(ctx):
     ctx.check_cc(header_name = 'msg/msg.h')
 
 def build(ctx):
-    ctx.stlib(
+    ctx.shlib(
         source=ctx.path.ant_glob('src/*.c'),
         includes=['include'],
         target='mrsg',
-        install_path='${LIBDIR}')
+        install_path='${LIBDIR}',
+        use='SIMGRID')
 
     ctx.install_files('${PREFIX}/include', [
         'include/mrsg.h',
