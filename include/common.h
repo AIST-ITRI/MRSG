@@ -89,7 +89,7 @@ struct config_s {
     int            slots[2];
     int            initialized;
     msg_host_t*    workers;
-} config;
+};
 
 struct job_s {
     int           finished;
@@ -99,7 +99,7 @@ struct job_s {
     msg_task_t**  task_list[2];
     size_t**      map_output;
     heartbeat_t   heartbeats;
-} job;
+};
 
 /** @brief  Information sent as the task data. */
 struct task_info_s {
@@ -129,8 +129,11 @@ struct user_s {
     void (*dfs_f)(char** dfs_matrix, size_t chunks, size_t workers, int replicas);
     int (*map_output_f)(size_t mid, size_t rid);
     size_t (*scheduler_f)(enum phase_e phase, size_t wid);
-} user;
+};
 
+extern struct job_s job;
+extern struct config_s config;
+extern struct user_s user;
 
 /** 
  * @brief  Send a message/task.

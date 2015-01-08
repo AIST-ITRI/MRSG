@@ -40,9 +40,12 @@ static void init_job (void);
 static void init_stats (void);
 static void free_global_mem (void);
 
+struct job_s job;
+struct config_s config;
+struct user_s user;
+
 int MRSG_main (const char* plat, const char* depl, const char* conf)
 {
-    int argc = 8;
     char* argv[] = {
 	"mrsg",
 	"--cfg=tracing:1",
@@ -53,6 +56,7 @@ int MRSG_main (const char* plat, const char* depl, const char* conf)
 	"--cfg=viva/categorized:cat.plist",
 	"--cfg=viva/uncategorized:uncat.plist"
     };
+    int argc = sizeof(argv)/sizeof(argv[0]);
 
     msg_error_t  res = MSG_OK;
 
