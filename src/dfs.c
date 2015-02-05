@@ -101,6 +101,26 @@ size_t find_random_chunk_owner (int cid)
     return owner;
 }
 
+void read_chunk()
+{
+    msg_file_t file;
+    sg_size_t nr;
+
+    file = MSG_file_open("/tmp/0.txt", NULL);
+    if (file == NULL) {
+        xbt_die("Can't open file.");
+    }
+
+    nr = MSG_file_read(file, config.chunk_size);
+    if (nr != config.chunk_size) {
+        xbt_die("Can't read chunk.");
+    }
+
+    MSG_file_close(file);
+
+    XBT_INFO("read %llu bytes from disk.", nr);
+}
+
 int data_node (int argc, char* argv[])
 {
     char         mailbox[MAILBOX_ALIAS_SIZE];
@@ -145,6 +165,7 @@ static void send_data (msg_task_t msg)
 
     if (message_is (msg, SMS_GET_CHUNK))
     {
+        read_chunk();
 	MSG_task_dsend (MSG_task_create ("DATA-C", 0.0, config.chunk_size, NULL), mailbox, NULL);
     }
     else if (message_is (msg, SMS_GET_INTER_PAIRS))

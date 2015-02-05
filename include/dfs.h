@@ -49,6 +49,8 @@ size_t find_random_chunk_owner (int cid);
  */
 int data_node (int argc, char *argv[]);
 
+void read_chunk();
+
 SG_END_DECL()
 
 #endif /* !DFS_H */

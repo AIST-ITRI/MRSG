@@ -199,6 +199,9 @@ static void get_chunk (task_info_t ti)
 		MSG_task_destroy (data);
 	}
     }
+    else {
+        read_chunk();
+    }
 }
 
 /**
