@@ -135,6 +135,10 @@ static int compute (int argc, char* argv[])
 
     if (job.task_status[ti->phase][ti->id] != T_STATUS_DONE)
     {
+        double power = MSG_get_host_speed(MSG_host_self());
+        double cost = MSG_task_get_compute_duration(task);
+        ti->cpu_time = cost / power;
+
 	TRY
 	{
 	    status = MSG_task_execute (task);

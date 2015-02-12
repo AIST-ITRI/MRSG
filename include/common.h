@@ -111,6 +111,10 @@ struct task_info_s {
     msg_task_t    task;
     size_t*       map_output_copied;
     double        shuffle_end;
+    double        start_time;
+    double        finished_time;
+    double        elapsed_time;
+    double        cpu_time;
 };
 
 typedef struct task_info_s* task_info_t;
