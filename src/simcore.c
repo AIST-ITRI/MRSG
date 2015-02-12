@@ -140,8 +140,8 @@ static void read_mr_config_file (const char* file_name)
     config.slots[MAP] = 2;
     config.amount_of_tasks[REDUCE] = 1;
     config.slots[REDUCE] = 2;
-    config.heartbeat_interval = 1;
-    config.reduce_polling_interval = 1;
+    config.heartbeat_interval = 1.0;
+    config.reduce_polling_interval = 1.0;
     config.reduce_slowstart_completed_maps = 0.05;
 
     /* Read the user configuration file. */
@@ -179,11 +179,11 @@ static void read_mr_config_file (const char* file_name)
 	}
 	else if ( strcmp (property, "heartbeat_interval") == 0 )
 	{
-	    fscanf (file, "%d", &config.heartbeat_interval);
+	    fscanf (file, "%lf", &config.heartbeat_interval);
 	}
 	else if ( strcmp (property, "reduce_polling_interval") == 0 )
 	{
-	    fscanf (file, "%d", &config.reduce_polling_interval);
+	    fscanf (file, "%lf", &config.reduce_polling_interval);
 	}
 	else if ( strcmp (property, "reduce_slowstart_completed_maps") == 0 )
 	{
@@ -206,8 +206,8 @@ static void read_mr_config_file (const char* file_name)
     xbt_assert (config.slots[MAP] > 0, "Map slots must be greater than zero");
     xbt_assert (config.amount_of_tasks[REDUCE] >= 0, "The number of reduce tasks can't be negative");
     xbt_assert (config.slots[REDUCE] > 0, "Reduce slots must be greater than zero");
-    xbt_assert (config.heartbeat_interval > 0, "heartbeat_interval must be greater than zero");
-    xbt_assert (config.reduce_polling_interval > 0, "reduce_polling_interval must be greater than zero");
+    xbt_assert (config.heartbeat_interval > 0.0, "heartbeat_interval must be greater than zero");
+    xbt_assert (config.reduce_polling_interval > 0.0, "reduce_polling_interval must be greater than zero");
     xbt_assert (config.reduce_slowstart_completed_maps >= 0, "reduce_slowstart_completed_maps must be zero or greater");
     xbt_assert (config.reduce_slowstart_completed_maps <= 1.0, "reduce_slowstart_completed_maps must be 1.0 or less");
 }

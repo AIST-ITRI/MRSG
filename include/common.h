@@ -81,8 +81,8 @@ struct config_s {
     double         grid_cpu_power;
     int            chunk_count;
     int            chunk_replicas;
-    int            heartbeat_interval;
-    int            reduce_polling_interval;
+    double         heartbeat_interval;
+    double         reduce_polling_interval;
     double         reduce_slowstart_completed_maps;
     int            amount_of_tasks[2];
     int            number_of_workers;

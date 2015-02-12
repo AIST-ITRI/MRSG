@@ -127,7 +127,7 @@ static void print_config (void)
     XBT_INFO ("workers: %d", config.number_of_workers);
     XBT_INFO ("grid power: %g flops", config.grid_cpu_power);
     XBT_INFO ("average power: %g flops/s", config.grid_average_speed);
-    XBT_INFO ("heartbeat interval: %ds", config.heartbeat_interval);
+    XBT_INFO ("heartbeat interval: %lfs", config.heartbeat_interval);
     XBT_INFO (" ");
 }
 
