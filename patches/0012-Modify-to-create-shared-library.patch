@@ -1,0 +1,31 @@
+From ebcf3aef3135509ba3ea5e6bd717a797668b0e9d Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Wed, 24 Dec 2014 17:25:17 +0900
+Subject: [PATCH 12/14] Modify to create shared library.
+
+---
+ wscript | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/wscript b/wscript
+index 5679d46..531ac78 100644
+--- a/wscript
++++ b/wscript
+@@ -20,11 +20,12 @@ def configure(ctx):
+     ctx.check_cc(header_name = 'msg/msg.h')
+ 
+ def build(ctx):
+-    ctx.stlib(
++    ctx.shlib(
+         source=ctx.path.ant_glob('src/*.c'),
+         includes=['include'],
+         target='mrsg',
+-        install_path='${LIBDIR}')
++        install_path='${LIBDIR}',
++        use='SIMGRID')
+ 
+     ctx.install_files('${PREFIX}/include', [
+         'include/mrsg.h',
+-- 
+2.2.1
+

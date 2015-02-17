@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+<platform version="3">
+	<process host="node-1.zone01" function="master"/>
+	<process host="node-2.zone01" function="worker"/>
+	<process host="node-3.zone01" function="worker"/>
+	<process host="node-4.zone01" function="worker"/>
+	<process host="node-5.zone01" function="worker"/>
+	<process host="node-6.zone01" function="worker"/>
+	<process host="node-7.zone01" function="worker"/>
+	<process host="node-8.zone01" function="worker"/>
+	<process host="node-9.zone01" function="worker"/>
+	<process host="node-10.zone01" function="worker"/>
+	<process host="node-11.zone01" function="worker"/>
+	<process host="node-12.zone01" function="worker"/>
+</platform>

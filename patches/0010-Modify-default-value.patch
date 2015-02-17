@@ -1,0 +1,29 @@
+From 8da67aeb94adda77efe1f46dbdfe96367f683ad7 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Mon, 8 Dec 2014 14:12:51 +0900
+Subject: [PATCH 10/14] Modify default value.
+
+- config.heartbeat_interval to 1
+- config.reduce_polling_interval to 1
+---
+ src/simcore.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/simcore.c b/src/simcore.c
+index 1483403..49f6b30 100644
+--- a/src/simcore.c
++++ b/src/simcore.c
+@@ -136,8 +136,8 @@ static void read_mr_config_file (const char* file_name)
+     config.slots[MAP] = 2;
+     config.amount_of_tasks[REDUCE] = 1;
+     config.slots[REDUCE] = 2;
+-    config.heartbeat_interval = HEARTBEAT_MIN_INTERVAL;
+-    config.reduce_polling_interval = 5;
++    config.heartbeat_interval = 1;
++    config.reduce_polling_interval = 1;
+     config.reduce_slowstart_completed_maps = 0.05;
+ 
+     /* Read the user configuration file. */
+-- 
+2.2.1
+

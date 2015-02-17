@@ -1,0 +1,140 @@
+From 1ad08e307b6b6593c4e8e0cfe9e8720927195cfd Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Mon, 1 Dec 2014 12:10:30 +0900
+Subject: [PATCH 05/14] Modify for C++.
+
+---
+ include/common.h     | 5 +++++
+ include/dfs.h        | 6 ++++++
+ include/mrsg.h       | 5 +++++
+ include/scheduling.h | 5 +++++
+ include/worker.h     | 6 ++++++
+ 5 files changed, 27 insertions(+)
+
+diff --git a/include/common.h b/include/common.h
+index 734089f..f3844db 100644
+--- a/include/common.h
++++ b/include/common.h
+@@ -19,11 +19,14 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
+ #define MRSG_COMMON_H
+ 
+ #include <msg/msg.h>
++#include <xbt/misc.h>
+ #include <xbt/sysdep.h>
+ #include <xbt/log.h>
+ #include <xbt/asserts.h>
+ #include "mrsg.h"
+ 
++SG_BEGIN_DECL()
++
+ /* Hearbeat parameters. */
+ #define HEARTBEAT_MIN_INTERVAL 3
+ #define HEARTBEAT_TIMEOUT 600
+@@ -175,6 +178,8 @@ size_t reduce_input_size (size_t rid);
+ 
+ enum task_type_e get_task_type (enum phase_e phase, size_t tid, size_t wid);
+ 
++SG_END_DECL()
++
+ #endif /* !MRSG_COMMON_H */
+ 
+ // vim: set ts=8 sw=4:
+diff --git a/include/dfs.h b/include/dfs.h
+index 13d049e..b8d8467 100644
+--- a/include/dfs.h
++++ b/include/dfs.h
+@@ -18,6 +18,10 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
+ #ifndef DFS_H
+ #define DFS_H
+ 
++#include <xbt/misc.h>
++
++SG_BEGIN_DECL()
++
+ /** @brief  Matrix that maps chunks to workers. */
+ char**  chunk_owner;
+ 
+@@ -45,6 +49,8 @@ size_t find_random_chunk_owner (int cid);
+  */
+ int data_node (int argc, char *argv[]);
+ 
++SG_END_DECL()
++
+ #endif /* !DFS_H */
+ 
+ // vim: set ts=8 sw=4:
+diff --git a/include/mrsg.h b/include/mrsg.h
+index 3c6956a..a8b92b8 100644
+--- a/include/mrsg.h
++++ b/include/mrsg.h
+@@ -19,6 +19,9 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
+ #define MRSG_H
+ 
+ #include <stdlib.h>
++#include <xbt/misc.h>
++
++SG_BEGIN_DECL()
+ 
+ /** @brief  Possible execution phases. */
+ enum phase_e {
+@@ -38,6 +41,8 @@ void MRSG_set_map_output_f ( int (*f)(size_t mid, size_t rid) );
+ 
+ void MRSG_set_scheduler_f ( size_t (*f)(enum phase_e phase, size_t wid) );
+ 
++SG_END_DECL()
++
+ #endif /* !MRSG_H */
+ 
+ // vim: set ts=8 sw=4:
+diff --git a/include/scheduling.h b/include/scheduling.h
+index b51f9d7..926dbc1 100644
+--- a/include/scheduling.h
++++ b/include/scheduling.h
+@@ -18,8 +18,11 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
+ #ifndef SCHEDULING_H
+ #define SCHEDULING_H
+ 
++#include <xbt/misc.h>
+ #include "common.h"
+ 
++SG_BEGIN_DECL()
++
+ /**
+  * @brief  Chooses a map or reduce task and send it to a worker.
+  * @param  phase  MAP or REDUCE.
+@@ -30,6 +33,8 @@ size_t default_scheduler_f (enum phase_e phase, size_t wid);
+ size_t choose_default_map_task (size_t wid);
+ size_t choose_default_reduce_task (size_t wid);
+ 
++SG_END_DECL()
++
+ #endif /* !SCHEDULING_H */
+ 
+ // vim: set ts=8 sw=4:
+diff --git a/include/worker.h b/include/worker.h
+index e6f089d..6c7e986 100644
+--- a/include/worker.h
++++ b/include/worker.h
+@@ -18,6 +18,10 @@ along with MRSG.  If not, see <http://www.gnu.org/licenses/>. */
+ #ifndef WORKER_H
+ #define WORKER_H
+ 
++#include <xbt/misc.h>
++
++SG_BEGIN_DECL()
++
+ /* hadoop-config: mapred.max.tracker.failures */
+ #define MAXIMUM_WORKER_FAILURES 4
+ 
+@@ -32,6 +36,8 @@ typedef struct w_info_s {
+  */
+ size_t get_worker_id (msg_host_t worker);
+ 
++SG_END_DECL()
++
+ #endif /* !WORKER_H */
+ 
+ // vim: set ts=8 sw=4:
+-- 
+2.2.1
+

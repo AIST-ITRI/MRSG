@@ -1,0 +1,74 @@
+From 73902460d81adeb04701bfefe7b42af362224c6e Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Thu, 8 Jan 2015 16:58:49 +0900
+Subject: [PATCH 13/14] Fix problem about global variables.
+
+---
+ include/common.h | 9 ++++++---
+ src/simcore.c    | 6 +++++-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/include/common.h b/include/common.h
+index 5472480..d424ffc 100644
+--- a/include/common.h
++++ b/include/common.h
+@@ -89,7 +89,7 @@ struct config_s {
+     int            slots[2];
+     int            initialized;
+     msg_host_t*    workers;
+-} config;
++};
+ 
+ struct job_s {
+     int           finished;
+@@ -99,7 +99,7 @@ struct job_s {
+     msg_task_t**  task_list[2];
+     size_t**      map_output;
+     heartbeat_t   heartbeats;
+-} job;
++};
+ 
+ /** @brief  Information sent as the task data. */
+ struct task_info_s {
+@@ -129,8 +129,11 @@ struct user_s {
+     void (*dfs_f)(char** dfs_matrix, size_t chunks, size_t workers, int replicas);
+     int (*map_output_f)(size_t mid, size_t rid);
+     size_t (*scheduler_f)(enum phase_e phase, size_t wid);
+-} user;
++};
+ 
++extern struct job_s job;
++extern struct config_s config;
++extern struct user_s user;
+ 
+ /** 
+  * @brief  Send a message/task.
+diff --git a/src/simcore.c b/src/simcore.c
+index 49f6b30..e37beb8 100644
+--- a/src/simcore.c
++++ b/src/simcore.c
+@@ -40,9 +40,12 @@ static void init_job (void);
+ static void init_stats (void);
+ static void free_global_mem (void);
+ 
++struct job_s job;
++struct config_s config;
++struct user_s user;
++
+ int MRSG_main (const char* plat, const char* depl, const char* conf)
+ {
+-    int argc = 8;
+     char* argv[] = {
+ 	"mrsg",
+ 	"--cfg=tracing:1",
+@@ -53,6 +56,7 @@ int MRSG_main (const char* plat, const char* depl, const char* conf)
+ 	"--cfg=viva/categorized:cat.plist",
+ 	"--cfg=viva/uncategorized:uncat.plist"
+     };
++    int argc = sizeof(argv)/sizeof(argv[0]);
+ 
+     msg_error_t  res = MSG_OK;
+ 
+-- 
+2.2.1
+

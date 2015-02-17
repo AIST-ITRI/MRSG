@@ -1,0 +1,8 @@
+*.bin
+*.csv
+*.plist
+*.trace
+.*.swp
+.lock-waf*
+.waf-*
+build

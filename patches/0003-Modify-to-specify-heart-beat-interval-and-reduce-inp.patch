@@ -1,0 +1,116 @@
+From dc3b81b55bc039227400c61d9917c0e6b8cbe176 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Mon, 1 Dec 2014 12:09:36 +0900
+Subject: [PATCH 03/14] Modify to specify heart beat interval and reduce input
+ interval.
+
+---
+ include/common.h |  1 +
+ src/simcore.c    | 20 +++++++++++++++-----
+ src/worker.c     |  4 +++-
+ 3 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/include/common.h b/include/common.h
+index abed811..734089f 100644
+--- a/include/common.h
++++ b/include/common.h
+@@ -79,6 +79,7 @@ struct config_s {
+     int            chunk_count;
+     int            chunk_replicas;
+     int            heartbeat_interval;
++    int            reduce_polling_interval;
+     int            amount_of_tasks[2];
+     int            number_of_workers;
+     int            slots[2];
+diff --git a/src/simcore.c b/src/simcore.c
+index f407e3b..61d8719 100644
+--- a/src/simcore.c
++++ b/src/simcore.c
+@@ -33,7 +33,7 @@ int worker (int argc, char *argv[]);
+ 
+ static void check_config (void);
+ static msg_error_t run_simulation (const char* platform_file, const char* deploy_file, const char* mr_config_file);
+-static void init_mr_config (const char* mr_config_file);
++static void init_mr_config (void);
+ static void read_mr_config_file (const char* file_name);
+ static void init_config (void);
+ static void init_job (void);
+@@ -99,7 +99,7 @@ static msg_error_t run_simulation (const char* platform_file, const char* deploy
+     MSG_function_register ("worker", worker);
+     MSG_launch_application (deploy_file);
+ 
+-    init_mr_config (mr_config_file);
++    init_mr_config ();
+ 
+     res = MSG_main ();
+ 
+@@ -110,9 +110,8 @@ static msg_error_t run_simulation (const char* platform_file, const char* deploy
+ 
+ /**
+  * @brief  Initialize the MapReduce configuration.
+- * @param  mr_config_file  The path/name of the configuration file.
+  */
+-static void init_mr_config (const char* mr_config_file)
++static void init_mr_config (void)
+ {
+     srand (12345);
+     init_config ();
+@@ -137,6 +136,8 @@ static void read_mr_config_file (const char* file_name)
+     config.slots[MAP] = 2;
+     config.amount_of_tasks[REDUCE] = 1;
+     config.slots[REDUCE] = 2;
++    config.heartbeat_interval = HEARTBEAT_MIN_INTERVAL;
++    config.reduce_polling_interval = 5;
+ 
+     /* Read the user configuration file. */
+ 
+@@ -171,6 +172,14 @@ static void read_mr_config_file (const char* file_name)
+ 	{
+ 	    fscanf (file, "%d", &config.slots[REDUCE]);
+ 	}
++	else if ( strcmp (property, "heartbeat_interval") == 0 )
++	{
++	    fscanf (file, "%d", &config.heartbeat_interval);
++	}
++	else if ( strcmp (property, "reduce_polling_interval") == 0 )
++	{
++	    fscanf (file, "%d", &config.reduce_polling_interval);
++	}
+ 	else
+ 	{
+ 	    printf ("Error: Property %s is not valid. (in %s)", property, file_name);
+@@ -188,6 +197,8 @@ static void read_mr_config_file (const char* file_name)
+     xbt_assert (config.slots[MAP] > 0, "Map slots must be greater than zero");
+     xbt_assert (config.amount_of_tasks[REDUCE] >= 0, "The number of reduce tasks can't be negative");
+     xbt_assert (config.slots[REDUCE] > 0, "Reduce slots must be greater than zero");
++    xbt_assert (config.heartbeat_interval, "heartbeat_interval must be greater than zero");
++    xbt_assert (config.reduce_polling_interval, "reduce_polling_interval must be greater than zero");
+ }
+ 
+ /**
+@@ -236,7 +247,6 @@ static void init_config (void)
+ 	}
+     }
+     config.grid_average_speed = config.grid_cpu_power / config.number_of_workers;
+-    config.heartbeat_interval = maxval (HEARTBEAT_MIN_INTERVAL, config.number_of_workers / 100);
+     config.amount_of_tasks[MAP] = config.chunk_count;
+     config.initialized = 1;
+ }
+diff --git a/src/worker.c b/src/worker.c
+index 9b219da..b4bb861 100644
+--- a/src/worker.c
++++ b/src/worker.c
+@@ -255,7 +255,9 @@ static void get_map_output (task_info_t ti)
+ 	    }
+ 	}
+ 	/* (Hadoop 0.20.2) mapred/ReduceTask.java:1979 */
+-	MSG_process_sleep (5);
++        if (total_copied < must_copy) {
++	    MSG_process_sleep (config.reduce_polling_interval);
++        }
+     }
+ 
+ #ifdef VERBOSE
+-- 
+2.2.1
+

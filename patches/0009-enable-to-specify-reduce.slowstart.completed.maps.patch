@@ -1,0 +1,77 @@
+From c18ed305ddf2d24eaa4587096ec518852556e872 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Fri, 5 Dec 2014 18:31:38 +0900
+Subject: [PATCH 09/14] enable to specify "reduce.slowstart.completed.maps".
+
+---
+ include/common.h |  1 +
+ src/scheduling.c |  3 ++-
+ src/simcore.c    | 11 +++++++++--
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/include/common.h b/include/common.h
+index f3844db..5472480 100644
+--- a/include/common.h
++++ b/include/common.h
+@@ -83,6 +83,7 @@ struct config_s {
+     int            chunk_replicas;
+     int            heartbeat_interval;
+     int            reduce_polling_interval;
++    double         reduce_slowstart_completed_maps;
+     int            amount_of_tasks[2];
+     int            number_of_workers;
+     int            slots[2];
+diff --git a/src/scheduling.c b/src/scheduling.c
+index e1bcc87..2039788 100644
+--- a/src/scheduling.c
++++ b/src/scheduling.c
+@@ -82,8 +82,9 @@ size_t choose_default_reduce_task (size_t wid)
+     size_t           t;
+     size_t           tid = NONE;
+     enum task_type_e task_type, best_task_type = NO_TASK;
++    double ss_rate = 1.0 - config.reduce_slowstart_completed_maps;
+ 
+-    if (job.tasks_pending[REDUCE] <= 0 || (float)job.tasks_pending[MAP]/config.amount_of_tasks[MAP] > 0.9)
++    if (job.tasks_pending[REDUCE] <= 0 || (double)job.tasks_pending[MAP]/config.amount_of_tasks[MAP] > ss_rate)
+ 	return tid;
+ 
+     for (t = 0; t < config.amount_of_tasks[REDUCE]; t++)
+diff --git a/src/simcore.c b/src/simcore.c
+index 61d8719..1483403 100644
+--- a/src/simcore.c
++++ b/src/simcore.c
+@@ -138,6 +138,7 @@ static void read_mr_config_file (const char* file_name)
+     config.slots[REDUCE] = 2;
+     config.heartbeat_interval = HEARTBEAT_MIN_INTERVAL;
+     config.reduce_polling_interval = 5;
++    config.reduce_slowstart_completed_maps = 0.05;
+ 
+     /* Read the user configuration file. */
+ 
+@@ -180,6 +181,10 @@ static void read_mr_config_file (const char* file_name)
+ 	{
+ 	    fscanf (file, "%d", &config.reduce_polling_interval);
+ 	}
++	else if ( strcmp (property, "reduce_slowstart_completed_maps") == 0 )
++	{
++	    fscanf (file, "%lf", &config.reduce_slowstart_completed_maps);
++	}
+ 	else
+ 	{
+ 	    printf ("Error: Property %s is not valid. (in %s)", property, file_name);
+@@ -197,8 +202,10 @@ static void read_mr_config_file (const char* file_name)
+     xbt_assert (config.slots[MAP] > 0, "Map slots must be greater than zero");
+     xbt_assert (config.amount_of_tasks[REDUCE] >= 0, "The number of reduce tasks can't be negative");
+     xbt_assert (config.slots[REDUCE] > 0, "Reduce slots must be greater than zero");
+-    xbt_assert (config.heartbeat_interval, "heartbeat_interval must be greater than zero");
+-    xbt_assert (config.reduce_polling_interval, "reduce_polling_interval must be greater than zero");
++    xbt_assert (config.heartbeat_interval > 0, "heartbeat_interval must be greater than zero");
++    xbt_assert (config.reduce_polling_interval > 0, "reduce_polling_interval must be greater than zero");
++    xbt_assert (config.reduce_slowstart_completed_maps >= 0, "reduce_slowstart_completed_maps must be zero or greater");
++    xbt_assert (config.reduce_slowstart_completed_maps <= 1.0, "reduce_slowstart_completed_maps must be 1.0 or less");
+ }
+ 
+ /**
+-- 
+2.2.1
+

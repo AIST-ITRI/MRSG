@@ -1,0 +1,57 @@
+From 960f3d9913282cd8dce5356a3d07fe9493af2cd5 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Thu, 27 Nov 2014 14:10:59 +0900
+Subject: [PATCH 01/14] Fix freeze.
+
+---
+ include/common.h | 1 +
+ src/common.c     | 7 +++++++
+ src/worker.c     | 2 +-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/include/common.h b/include/common.h
+index 48ab722..abed811 100644
+--- a/include/common.h
++++ b/include/common.h
+@@ -145,6 +145,7 @@ msg_error_t send (const char* str, double cpu, double net, void* data, const cha
+  * @return The MSG status of the operation.
+  */
+ msg_error_t send_sms (const char* str, const char* mailbox);
++void dsend_sms (const char* str, const char* mailbox);
+ 
+ /** 
+  * @brief  Receive a message/task from a mailbox.
+diff --git a/src/common.c b/src/common.c
+index 1007769..f48d6e6 100644
+--- a/src/common.c
++++ b/src/common.c
+@@ -41,6 +41,13 @@ msg_error_t send (const char* str, double cpu, double net, void* data, const cha
+     return status;
+ }
+ 
++void dsend_sms (const char* str, const char* mailbox)
++{
++    msg_task_t   msg = NULL;
++    msg = MSG_task_create (str, 0.0, 0.0, NULL);
++    MSG_task_dsend (msg, mailbox, (void_f_pvoid_t)MSG_task_destroy );
++}
++
+ msg_error_t send_sms (const char* str, const char* mailbox)
+ {
+     return send (str, 0.0, 0.0, NULL, mailbox);
+diff --git a/src/worker.c b/src/worker.c
+index 8fc176b..9b219da 100644
+--- a/src/worker.c
++++ b/src/worker.c
+@@ -71,7 +71,7 @@ static void heartbeat (void)
+ {
+     while (!job.finished)
+     {
+-	send_sms (SMS_HEARTBEAT, MASTER_MAILBOX);
++	dsend_sms (SMS_HEARTBEAT, MASTER_MAILBOX);
+ 	MSG_process_sleep (config.heartbeat_interval);
+     }
+ }
+-- 
+2.2.1
+

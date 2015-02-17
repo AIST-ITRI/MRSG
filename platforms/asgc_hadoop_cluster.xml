@@ -1,0 +1,10 @@
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+<platform version="3">
+    <AS id="zone01" routing="Full">
+        <cluster id="Cluster" prefix="node-" suffix=".zone01" radical="1-12" 
+            power="172800000000" 
+            core="20"
+            bw="10Gbps" 
+            lat="0.0005" />
+    </AS>
+</platform>

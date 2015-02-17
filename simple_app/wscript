@@ -1,0 +1,41 @@
+import re
+import os.path
+
+APPNAME = 'MRSG Simple Application'
+VERSION = '1.0.0'
+
+top = '.'
+out = 'build'
+
+def options(ctx):
+    ctx.add_option('--search-path', action='store', default='', help='Search paths')
+    ctx.load('compiler_c')
+
+def configure(ctx):
+    search_paths = []
+    if len(ctx.options.search_path) > 0:
+        search_paths = ctx.options.search_path.split(':')
+        ctx.env.append_value('INCLUDES', [ s + '/include' for s in search_paths])
+        ctx.env.append_value('LIBPATH', [ s + '/lib'     for s in search_paths])
+
+    ctx.load('compiler_c')
+    ctx.check_cc(lib = 'm')
+
+    # SimGrid
+    ctx.check_cc(lib = 'simgrid')
+    ctx.check_cc(header_name = 'msg/msg.h')
+
+    # MRSG
+    ctx.check_cc(lib = 'mrsg')
+    ctx.check_cc(header_name = 'mrsg.h')
+
+    ctx.env.USE= 'MRSG SIMGRID M'
+
+def build(ctx):
+    sources = ctx.path.ant_glob('*.c')
+    for s in sources:
+        tgt = re.sub(r'\.c$', r'.bin', str(s))
+        ctx.program(
+            source=[s],
+            target=tgt,
+            use=ctx.env.USE)

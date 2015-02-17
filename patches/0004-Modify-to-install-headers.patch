@@ -1,0 +1,28 @@
+From a36ed3a6d82c7b132337976b0aee8fb52b19f364 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Mon, 1 Dec 2014 12:10:16 +0900
+Subject: [PATCH 04/14] Modify to install headers.
+
+---
+ Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index fb5f508..7661122 100644
+--- a/Makefile
++++ b/Makefile
+@@ -12,7 +12,10 @@ OBJ = common.o simcore.o dfs.o master.o worker.o user.o scheduling.o
+ all: $(BIN)
+ 
+ install: $(BIN)
+-	install $(BIN) $(INSTALL_PATH)/lib
++	install $(BIN)               $(INSTALL_PATH)/lib
++	install include/mrsg.h       $(INSTALL_PATH)/include
++	install include/scheduling.h $(INSTALL_PATH)/include
++	install include/common.h     $(INSTALL_PATH)/include
+ 
+ $(BIN): $(OBJ)
+ 	ar rcs $(BIN) $(OBJ)
+-- 
+2.2.1
+

@@ -1,0 +1,80 @@
+From 0c9170574dc74d5b49a2fcc08307c7a4bcb3fd3b Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Thu, 5 Feb 2015 16:09:09 +0900
+Subject: [PATCH 14/14] Add the process to read chunks in mappers.
+
+---
+ include/dfs.h |  2 ++
+ src/dfs.c     | 21 +++++++++++++++++++++
+ src/worker.c  |  3 +++
+ 3 files changed, 26 insertions(+)
+
+diff --git a/include/dfs.h b/include/dfs.h
+index b8d8467..3d86c2c 100644
+--- a/include/dfs.h
++++ b/include/dfs.h
+@@ -49,6 +49,8 @@ size_t find_random_chunk_owner (int cid);
+  */
+ int data_node (int argc, char *argv[]);
+ 
++void read_chunk();
++
+ SG_END_DECL()
+ 
+ #endif /* !DFS_H */
+diff --git a/src/dfs.c b/src/dfs.c
+index dc9eb88..9cdaf8c 100644
+--- a/src/dfs.c
++++ b/src/dfs.c
+@@ -101,6 +101,26 @@ size_t find_random_chunk_owner (int cid)
+     return owner;
+ }
+ 
++void read_chunk()
++{
++    msg_file_t file;
++    sg_size_t nr;
++
++    file = MSG_file_open("/tmp/0.txt", NULL);
++    if (file == NULL) {
++        xbt_die("Can't open file.");
++    }
++
++    nr = MSG_file_read(file, config.chunk_size);
++    if (nr != config.chunk_size) {
++        xbt_die("Can't read chunk.");
++    }
++
++    MSG_file_close(file);
++
++    XBT_INFO("read %llu bytes from disk.", nr);
++}
++
+ int data_node (int argc, char* argv[])
+ {
+     char         mailbox[MAILBOX_ALIAS_SIZE];
+@@ -145,6 +165,7 @@ static void send_data (msg_task_t msg)
+ 
+     if (message_is (msg, SMS_GET_CHUNK))
+     {
++        read_chunk();
+ 	MSG_task_dsend (MSG_task_create ("DATA-C", 0.0, config.chunk_size, NULL), mailbox, NULL);
+     }
+     else if (message_is (msg, SMS_GET_INTER_PAIRS))
+diff --git a/src/worker.c b/src/worker.c
+index 03fbc97..8c26320 100644
+--- a/src/worker.c
++++ b/src/worker.c
+@@ -199,6 +199,9 @@ static void get_chunk (task_info_t ti)
+ 		MSG_task_destroy (data);
+ 	}
+     }
++    else {
++        read_chunk();
++    }
+ }
+ 
+ /**
+-- 
+2.2.1
+

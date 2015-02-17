@@ -1,0 +1,27 @@
+From 7abcade606edcacaf1cfbc764ccceaeab1dabf1a Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Fri, 5 Dec 2014 17:53:49 +0900
+Subject: [PATCH 08/14] disable to skip last sleep in reduce input polling.
+
+---
+ src/worker.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/src/worker.c b/src/worker.c
+index b4bb861..103cdc3 100644
+--- a/src/worker.c
++++ b/src/worker.c
+@@ -255,9 +255,7 @@ static void get_map_output (task_info_t ti)
+ 	    }
+ 	}
+ 	/* (Hadoop 0.20.2) mapred/ReduceTask.java:1979 */
+-        if (total_copied < must_copy) {
+-	    MSG_process_sleep (config.reduce_polling_interval);
+-        }
++	MSG_process_sleep (config.reduce_polling_interval);
+     }
+ 
+ #ifdef VERBOSE
+-- 
+2.2.1
+

@@ -1,0 +1,33 @@
+From aad1b5fb03cbd7e1e26788e29e15b84b30a3e889 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Mon, 1 Dec 2014 18:12:53 +0900
+Subject: [PATCH 06/14] Remove invalid variable.
+
+---
+ Makefile | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 7661122..01762d9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,7 +3,6 @@ CFLAGS = -Wall -g3
+ 
+ INSTALL_PATH = $$HOME/SimGrid
+ INCLUDES = -Iinclude -I$(INSTALL_PATH)/include
+-DEFS = -L$(INSTALL_PATH)/lib
+ LDADD = -lm -lsimgrid
+ 
+ BIN = libmrsg.a
+@@ -22,7 +21,7 @@ $(BIN): $(OBJ)
+ #	$(CC) $(INCLUDES) $(DEFS) $(CFLAGS) $(LDADD) -o $@ $^
+ 
+ %.o: src/%.c include/*.h
+-	$(CC) $(INCLUDES) $(DEFS) $(CFLAGS) -c -o $@ $<
++	$(CC) $(INCLUDES) $(CFLAGS) -c -o $@ $<
+ 
+ verbose: clean
+ 	$(eval CFLAGS += -DVERBOSE)
+-- 
+2.2.1
+

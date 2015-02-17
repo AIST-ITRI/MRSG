@@ -1,0 +1,43 @@
+From c20b33c2b1cb16e7bf9ef2aabd5e4144090b20f2 Mon Sep 17 00:00:00 2001
+From: Tatsuhiko Inoue <tatuhiko-inoue@aist.go.jp>
+Date: Thu, 27 Nov 2014 14:18:40 +0900
+Subject: [PATCH 02/14] Modify Makefile.
+
+- Modify INSTALL_PATH.
+- Add install target.
+---
+ Makefile | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 60562f2..fb5f508 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ CC = gcc
+ CFLAGS = -Wall -g3
+ 
+-INSTALL_PATH = $$HOME/simgrid
++INSTALL_PATH = $$HOME/SimGrid
+ INCLUDES = -Iinclude -I$(INSTALL_PATH)/include
+ DEFS = -L$(INSTALL_PATH)/lib
+ LDADD = -lm -lsimgrid
+@@ -11,6 +11,9 @@ OBJ = common.o simcore.o dfs.o master.o worker.o user.o scheduling.o
+ 
+ all: $(BIN)
+ 
++install: $(BIN)
++	install $(BIN) $(INSTALL_PATH)/lib
++
+ $(BIN): $(OBJ)
+ 	ar rcs $(BIN) $(OBJ)
+ #	$(CC) $(INCLUDES) $(DEFS) $(CFLAGS) $(LDADD) -o $@ $^
+@@ -34,4 +37,4 @@ clean:
+ 	rm -vf $(BIN) *.o *.log *.trace
+ 
+ .SUFFIXES:
+-.PHONY: all check clean debug final verbose
++.PHONY: all check clean debug final verbose install
+-- 
+2.2.1
+
