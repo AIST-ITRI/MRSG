@@ -233,4 +233,10 @@ patches - MRSGへの変更
 - gen_cluster.pyにて生成しているプラットフォーム定義ファイルでは、チャンク用のファイルとして1TBのファイルを定義している。
   したがって、チャンクのサイズが1TBよりも大きい場合には正常に動作しない。
 
+その他
+======
+
+misc/AMPLab_BigDataBenchmark以下にはAMPLab Big Data Benchmarkを実行するためのファイル群が含まれている。
+詳細については misc/AMPLab_BigDataBenchmark/README.rst を参照のこと。
+
 以上
