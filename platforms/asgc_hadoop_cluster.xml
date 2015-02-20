@@ -1,10 +1,570 @@
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
 <platform version="3">
-    <AS id="zone01" routing="Full">
-        <cluster id="Cluster" prefix="node-" suffix=".zone01" radical="1-12" 
-            power="172800000000" 
-            core="20"
-            bw="10Gbps" 
-            lat="0.0005" />
-    </AS>
+  <AS id="zone01" routing="Full">
+    <storage_type content="a.contents.txt" content_type="txt_unix" id="single_HDD" model="linear_no_lat" size="10240TB">
+      <model_prop id="Bwrite" value="200MBps"/>
+      <model_prop id="Bread" value="200MBps"/>
+      <model_prop id="Bconnection" value="200MBps"/>
+    </storage_type>
+    <storage attach="node-0.zone01" id="Disk0" typeId="single_HDD"/>
+    <storage attach="node-1.zone01" id="Disk1" typeId="single_HDD"/>
+    <storage attach="node-2.zone01" id="Disk2" typeId="single_HDD"/>
+    <storage attach="node-3.zone01" id="Disk3" typeId="single_HDD"/>
+    <storage attach="node-4.zone01" id="Disk4" typeId="single_HDD"/>
+    <storage attach="node-5.zone01" id="Disk5" typeId="single_HDD"/>
+    <storage attach="node-6.zone01" id="Disk6" typeId="single_HDD"/>
+    <storage attach="node-7.zone01" id="Disk7" typeId="single_HDD"/>
+    <storage attach="node-8.zone01" id="Disk8" typeId="single_HDD"/>
+    <storage attach="node-9.zone01" id="Disk9" typeId="single_HDD"/>
+    <storage attach="node-10.zone01" id="Disk10" typeId="single_HDD"/>
+    <storage attach="node-11.zone01" id="Disk11" typeId="single_HDD"/>
+    <storage attach="node-12.zone01" id="Disk12" typeId="single_HDD"/>
+    <storage attach="node-13.zone01" id="Disk13" typeId="single_HDD"/>
+    <storage attach="node-14.zone01" id="Disk14" typeId="single_HDD"/>
+    <storage attach="node-15.zone01" id="Disk15" typeId="single_HDD"/>
+    <link bandwidth="200Mbps" id="link0" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link1" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link2" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link3" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link4" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link5" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link6" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link7" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link8" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link9" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link10" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link11" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link12" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link13" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link14" latency="0.0005"/>
+    <link bandwidth="200Mbps" id="link15" latency="0.0005"/>
+    <host core="20" id="node-0.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk0"/>
+    </host>
+    <host core="20" id="node-1.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk1"/>
+    </host>
+    <host core="20" id="node-2.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk2"/>
+    </host>
+    <host core="20" id="node-3.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk3"/>
+    </host>
+    <host core="20" id="node-4.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk4"/>
+    </host>
+    <host core="20" id="node-5.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk5"/>
+    </host>
+    <host core="20" id="node-6.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk6"/>
+    </host>
+    <host core="20" id="node-7.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk7"/>
+    </host>
+    <host core="20" id="node-8.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk8"/>
+    </host>
+    <host core="20" id="node-9.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk9"/>
+    </host>
+    <host core="20" id="node-10.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk10"/>
+    </host>
+    <host core="20" id="node-11.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk11"/>
+    </host>
+    <host core="20" id="node-12.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk12"/>
+    </host>
+    <host core="20" id="node-13.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk13"/>
+    </host>
+    <host core="20" id="node-14.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk14"/>
+    </host>
+    <host core="20" id="node-15.zone01" power="172800000000">
+      <mount name="/tmp" storageId="Disk15"/>
+    </host>
+    <route dst="node-1.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link1"/>
+    </route>
+    <route dst="node-2.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link2"/>
+    </route>
+    <route dst="node-3.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link3"/>
+    </route>
+    <route dst="node-4.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link4"/>
+    </route>
+    <route dst="node-5.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link5"/>
+    </route>
+    <route dst="node-6.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link6"/>
+    </route>
+    <route dst="node-7.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-0.zone01">
+      <link_ctn id="link0"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-2.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link2"/>
+    </route>
+    <route dst="node-3.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link3"/>
+    </route>
+    <route dst="node-4.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link4"/>
+    </route>
+    <route dst="node-5.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link5"/>
+    </route>
+    <route dst="node-6.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link6"/>
+    </route>
+    <route dst="node-7.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-1.zone01">
+      <link_ctn id="link1"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-3.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link3"/>
+    </route>
+    <route dst="node-4.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link4"/>
+    </route>
+    <route dst="node-5.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link5"/>
+    </route>
+    <route dst="node-6.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link6"/>
+    </route>
+    <route dst="node-7.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-2.zone01">
+      <link_ctn id="link2"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-4.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link4"/>
+    </route>
+    <route dst="node-5.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link5"/>
+    </route>
+    <route dst="node-6.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link6"/>
+    </route>
+    <route dst="node-7.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-3.zone01">
+      <link_ctn id="link3"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-5.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link5"/>
+    </route>
+    <route dst="node-6.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link6"/>
+    </route>
+    <route dst="node-7.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-4.zone01">
+      <link_ctn id="link4"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-6.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link6"/>
+    </route>
+    <route dst="node-7.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-5.zone01">
+      <link_ctn id="link5"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-7.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link7"/>
+    </route>
+    <route dst="node-8.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-6.zone01">
+      <link_ctn id="link6"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-8.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link8"/>
+    </route>
+    <route dst="node-9.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-7.zone01">
+      <link_ctn id="link7"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-9.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link9"/>
+    </route>
+    <route dst="node-10.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-8.zone01">
+      <link_ctn id="link8"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-10.zone01" src="node-9.zone01">
+      <link_ctn id="link9"/>
+      <link_ctn id="link10"/>
+    </route>
+    <route dst="node-11.zone01" src="node-9.zone01">
+      <link_ctn id="link9"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-9.zone01">
+      <link_ctn id="link9"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-9.zone01">
+      <link_ctn id="link9"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-9.zone01">
+      <link_ctn id="link9"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-9.zone01">
+      <link_ctn id="link9"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-11.zone01" src="node-10.zone01">
+      <link_ctn id="link10"/>
+      <link_ctn id="link11"/>
+    </route>
+    <route dst="node-12.zone01" src="node-10.zone01">
+      <link_ctn id="link10"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-10.zone01">
+      <link_ctn id="link10"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-10.zone01">
+      <link_ctn id="link10"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-10.zone01">
+      <link_ctn id="link10"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-12.zone01" src="node-11.zone01">
+      <link_ctn id="link11"/>
+      <link_ctn id="link12"/>
+    </route>
+    <route dst="node-13.zone01" src="node-11.zone01">
+      <link_ctn id="link11"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-11.zone01">
+      <link_ctn id="link11"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-11.zone01">
+      <link_ctn id="link11"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-13.zone01" src="node-12.zone01">
+      <link_ctn id="link12"/>
+      <link_ctn id="link13"/>
+    </route>
+    <route dst="node-14.zone01" src="node-12.zone01">
+      <link_ctn id="link12"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-12.zone01">
+      <link_ctn id="link12"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-14.zone01" src="node-13.zone01">
+      <link_ctn id="link13"/>
+      <link_ctn id="link14"/>
+    </route>
+    <route dst="node-15.zone01" src="node-13.zone01">
+      <link_ctn id="link13"/>
+      <link_ctn id="link15"/>
+    </route>
+    <route dst="node-15.zone01" src="node-14.zone01">
+      <link_ctn id="link14"/>
+      <link_ctn id="link15"/>
+    </route>
+  </AS>
 </platform>
