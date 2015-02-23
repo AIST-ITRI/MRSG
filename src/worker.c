@@ -69,9 +69,27 @@ int worker (int argc, char* argv[])
  */
 static void heartbeat (void)
 {
+    msg_comm_t comm = NULL;
+    msg_error_t result;
+
     while (!job.finished)
     {
-	dsend_sms (SMS_HEARTBEAT, MASTER_MAILBOX);
+        if (comm != NULL) {
+            if (MSG_comm_test(comm)) {
+                result = MSG_comm_get_status(comm);
+                xbt_assert(result == MSG_OK, "Can't send heartbeat.");
+
+                comm = NULL;
+            }
+        }
+        if (comm == NULL) {
+	    comm = isend_sms (SMS_HEARTBEAT, MASTER_MAILBOX);
+            xbt_assert(comm != NULL, "Can't send heartbeat.");
+        }
+        else 
+        {
+            XBT_INFO("Skip to send heartbeat, because previous heartbeat has not been processed.");
+        }
 	MSG_process_sleep (config.heartbeat_interval);
     }
 }
@@ -135,6 +153,10 @@ static int compute (int argc, char* argv[])
 
     if (job.task_status[ti->phase][ti->id] != T_STATUS_DONE)
     {
+        double power = MSG_get_host_speed(MSG_host_self());
+        double cost = MSG_task_get_compute_duration(task);
+        ti->cpu_time = cost / power;
+
 	TRY
 	{
 	    status = MSG_task_execute (task);

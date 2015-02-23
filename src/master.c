@@ -47,6 +47,8 @@ int master (int argc, char* argv[])
     msg_task_t   msg = NULL;
     size_t       wid;
     task_info_t  ti;
+    double total_cpu_time = 0.0;
+    double total_task_time = 0.0;
 
     print_config ();
     XBT_INFO ("JOB BEGIN"); XBT_INFO (" ");
@@ -95,6 +97,11 @@ int master (int argc, char* argv[])
 			XBT_INFO ("%s PHASE DONE", (ti->phase==MAP?"MAP":"REDUCE"));
 			XBT_INFO (" ");
 		    }
+                    ti->finished_time = MSG_get_clock();
+                    ti->elapsed_time = ti->finished_time - ti->start_time;
+
+                    total_task_time += ti->elapsed_time;
+                    total_cpu_time  += ti->cpu_time;
 		}
 		xbt_free_ref (&ti);
 	    }
@@ -108,7 +115,11 @@ int master (int argc, char* argv[])
 
     print_config ();
     print_stats ();
+
     XBT_INFO ("JOB END");
+    XBT_INFO ("\tclock_time: %f", MSG_get_clock());
+    XBT_INFO ("\ttotal_task_time: %f(%f)", total_task_time, total_task_time / MSG_get_clock());
+    XBT_INFO ("\ttotal_cpu_time: %f(%f)", total_cpu_time, total_cpu_time / MSG_get_clock());
 
     return 0;
 }
@@ -127,7 +138,7 @@ static void print_config (void)
     XBT_INFO ("workers: %d", config.number_of_workers);
     XBT_INFO ("grid power: %g flops", config.grid_cpu_power);
     XBT_INFO ("average power: %g flops/s", config.grid_average_speed);
-    XBT_INFO ("heartbeat interval: %ds", config.heartbeat_interval);
+    XBT_INFO ("heartbeat interval: %lfs", config.heartbeat_interval);
     XBT_INFO (" ");
 }
 
@@ -317,6 +328,10 @@ static void send_task (enum phase_e phase, size_t tid, size_t data_src, size_t w
     task_info->wid = wid;
     task_info->task = task;
     task_info->shuffle_end = 0.0;
+    task_info->start_time = MSG_get_clock();
+    task_info->finished_time = 0.0;
+    task_info->elapsed_time = 0.0;
+    task_info->cpu_time = 0.0;
 
     // for tracing purposes...
     MSG_task_set_category (task, (phase==MAP?"MAP":"REDUCE"));

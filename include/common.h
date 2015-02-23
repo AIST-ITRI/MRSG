@@ -81,8 +81,8 @@ struct config_s {
     double         grid_cpu_power;
     int            chunk_count;
     int            chunk_replicas;
-    int            heartbeat_interval;
-    int            reduce_polling_interval;
+    double         heartbeat_interval;
+    double         reduce_polling_interval;
     double         reduce_slowstart_completed_maps;
     int            amount_of_tasks[2];
     int            number_of_workers;
@@ -111,6 +111,10 @@ struct task_info_s {
     msg_task_t    task;
     size_t*       map_output_copied;
     double        shuffle_end;
+    double        start_time;
+    double        finished_time;
+    double        elapsed_time;
+    double        cpu_time;
 };
 
 typedef struct task_info_s* task_info_t;
@@ -153,7 +157,7 @@ msg_error_t send (const char* str, double cpu, double net, void* data, const cha
  * @return The MSG status of the operation.
  */
 msg_error_t send_sms (const char* str, const char* mailbox);
-void dsend_sms (const char* str, const char* mailbox);
+msg_comm_t isend_sms (const char* str, const char* mailbox);
 
 /** 
  * @brief  Receive a message/task from a mailbox.
