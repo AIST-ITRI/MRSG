@@ -239,4 +239,10 @@ patches - MRSGへの変更
 misc/AMPLab_BigDataBenchmark以下にはAMPLab Big Data Benchmarkを実行するためのファイル群が含まれている。
 詳細については misc/AMPLab_BigDataBenchmark/README.rst を参照のこと。
 
+COPYRIGHT
+=========
+
+Copyright (C) 2015 National Institute of Advanced Industrial Science and Technology (AIST)
+Registration Number: H27PRO-1827
+
 以上
