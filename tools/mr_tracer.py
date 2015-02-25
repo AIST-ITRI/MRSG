@@ -13,6 +13,7 @@ from job_history_server import JobHistoryServer
 from collections import defaultdict
 
 mapoutput_pattern = re.compile('.* org.apache.hadoop.mapreduce.task.reduce.Fetcher: fetcher#\d+ about to shuffle output of map (attempt_\w+) decomp: \d+ len: (\d+) to .*')
+attempt_id_pattern = re.compile('attempt_(\d+_\d+_[mr]_\d+)_(\d+)')
 
 def failure(msg):
     sys.stderr.write(msg + "\n")
@@ -27,6 +28,14 @@ def format_counters_to_dict(counters):
         d[group['counterGroupName']] = dict([(c['name'], c['value']) for c in group['counter']])
     return d
 
+def attempt2task(attempt_id):
+    m = attempt_id_pattern.match(attempt_id)
+    if m is None:
+        failure('unexpect attempt id: %s' % attempt_id)
+
+    return 'task_' + m.group(1)
+
+
 def get_attempts(queue, jobid, user, server, oq):
     map_cost = {}
     red_cost = {}
@@ -38,36 +47,35 @@ def get_attempts(queue, jobid, user, server, oq):
 
             attempts = server.task_attempts(jobid, taskid)
 
+            finish_time = None
             for attempt in attempts:
-                if attempt['state'] == 'SUCCEEDED':
+                if attempt['state'] == 'SUCCEEDED' and (finish_time == None or finish_time > int(attempt['finishTime'])):
+                    finish_time= int(attempt['finishTime'])
                     if attempt['type'] == 'MAP':
-                        id = attempt['id']
-
                         counters = format_counters_to_dict(
                             server.task_attempt_counter(jobid, taskid, attempt['id']))
 
                         hdfsNRead = counters['org.apache.hadoop.mapreduce.FileSystemCounter']['HDFS_BYTES_READ']
                         cpuTimeMs = counters['org.apache.hadoop.mapreduce.TaskCounter']['CPU_MILLISECONDS']
 
-                        map_cost[id]  = cpuTimeMs
-                        map_input[id] = int(hdfsNRead)
+                        map_cost[taskid]  = cpuTimeMs
+                        map_input[taskid] = int(hdfsNRead)
 
                     elif attempt['type'] == 'REDUCE':
                         node = attempt['nodeHttpAddress'].split(':')[0]
                         cid  = attempt['assignedContainerId']
-                        id   = attempt['id']
-                        log = server.logs(node, cid, id, user)
+                        log = server.logs(node, cid, attempt['id'], user)
                         for line in log.split('\n'):
                             m = mapoutput_pattern.match(line)
                             if m:
-                                map_output[m.group(1)][id] = int(m.group(2))
+                                map_output[m.group(1)][taskid] = int(m.group(2))
 
                         counters = format_counters_to_dict(
                             server.task_attempt_counter(jobid, taskid, attempt['id']))
 
                         cpuTimeMs = counters['org.apache.hadoop.mapreduce.TaskCounter']['CPU_MILLISECONDS']
 
-                        red_cost[id] = cpuTimeMs
+                        red_cost[taskid] = cpuTimeMs
     except Queue.Empty:
         oq.put((map_cost, red_cost, map_input, map_output))
 
@@ -119,7 +127,7 @@ def main():
     map_cost = {}
     red_cost = {}
     map_input = {}
-    map_output = defaultdict(dict)
+    map_output_tmp  = defaultdict(dict)
 
     for t in ts:
         t.join()
@@ -133,9 +141,15 @@ def main():
             map_input.update(mi)
 
             for mi, values in mo.items():
-                map_output[mi].update(values)
+                map_output_tmp[mi].update(values)
     except Queue.Empty:
         pass
+
+    map_output = defaultdict(lambda: defaultdict(int))
+    for k,v in map_output_tmp.items():
+        taskid = attempt2task(k)
+        for rid, val in v.items():
+            map_output[taskid][rid] += val
 
     # check map_output
     if len(red_cost) > 0:
